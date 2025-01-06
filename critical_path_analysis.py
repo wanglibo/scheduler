@@ -31,8 +31,9 @@ class CriticalPathAnalysis:
     """
     Analyzes a project's critical path and slack times.
     """
-    # Input task list
-    tasks: TaskList
+    # Input tasks
+    task_list: List[Task]
+    task_map: Dict[TaskId, Task]
     # Min finish time for the project assuming unlimited resource
     min_finish_time: EndTime = None
     # Topological sorted task IDs
@@ -62,6 +63,7 @@ class CriticalPathAnalysis:
         graph = {task_id: set(deps) for task_id, deps in incoming_edge_graph.items()}
         sorted = []
         while graph:
+            # TODO: cache this result to avoid recomputing
             available_tasks = [task_id for task_id, deps in graph.items() if not deps]
             if not available_tasks:
                 raise ValueError('Dependency cycle detected in task graph')
