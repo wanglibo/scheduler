@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Dict, Set, List, Optional, TypeAlias
 
 # Type aliases for domain-specific concepts
@@ -9,6 +10,7 @@ ResourceId: TypeAlias = int
 DependencySet: TypeAlias = Set[TaskId]
 
 class Task:
+    """Represents a task in a project."""
     id: TaskId
     name: str
     duration: Duration
@@ -44,3 +46,22 @@ class Task:
         if self.start_time is not None:
             return self.start_time + self.duration
         return None
+
+@dataclass
+class TaskList:
+    """Represents a list of tasks in a project."""
+    tasks: List[Task]
+    task_map: Dict[TaskId, Task]
+
+    def __init__(self, tasks: List[Task]) -> None:
+        self.tasks = tasks
+        self.task_map = {task.id: task for task in tasks}
+
+    def as_list(self) -> List[Task]:
+        return self.tasks
+
+    def as_map(self) -> Dict[TaskId, Task]:
+        return self.task_map
+    
+    def copy(self) -> 'TaskList':
+        return TaskList(self.tasks.copy())

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import List, Dict
-from data_model import Task, TaskId, StartTime, EndTime
+from data_model import Task, TaskList, TaskId, StartTime, EndTime
 
 @dataclass
-class TaskTimingAnalysis:
+class TaskTiming:
     """
     Stores timing analysis results for a single task.
     
@@ -32,13 +32,13 @@ class CriticalPathAnalysis:
     Analyzes a project's critical path and slack times.
     """
     # Input task list
-    tasks: List[Task]
+    tasks: TaskList
     # Min finish time for the project assuming unlimited resource
     min_finish_time: EndTime = None
     # Topological sorted task IDs
     topological_sorted_tasks : List[TaskId] 
     # Timing analysis results for each task
-    timing : Dict[TaskId, TaskTimingAnalysis]
+    timing : Dict[TaskId, TaskTiming]
 
     def __str__(self) -> str:
         lines = []
@@ -47,10 +47,10 @@ class CriticalPathAnalysis:
             lines.append(f'Task {task}: {timing}')
         return '\n'.join(lines)
 
-    def __init__(self, tasks: List[Task]) -> None:
-        self.tasks = tasks
-        self.task_map = {task.id: task for task in tasks}
-        self.timing = {task.id: TaskTimingAnalysis(0, 0, 0, 0) for task in tasks}
+    def __init__(self, tasks: TaskList) -> None:
+        self.task_list = tasks.as_list()
+        self.task_map = tasks.as_map()
+        self.timing = {task.id: TaskTiming(0, 0, 0, 0) for task in self.task_list}
         self.forward_backward_passes()
 
     @staticmethod
@@ -77,7 +77,7 @@ class CriticalPathAnalysis:
 
     def forward_backward_passes(self):
         # Forward pass to compute earliest start and end times
-        dependency_graph = {task.id: task.dependencies.copy() for task in self.tasks}
+        dependency_graph = {task.id: task.dependencies.copy() for task in self.task_list}
         sorted_task_ids = self.topological_sort(dependency_graph)
         for task_id in sorted_task_ids:
             earliest_start = max(
@@ -93,8 +93,8 @@ class CriticalPathAnalysis:
         self.min_finish_time = max(t.earliest_finish for t in self.timing.values())
 
         # Backward pass to compute latest start and end times
-        reversed_dependency_graph = {task.id: set() for task in self.tasks}
-        for task in self.tasks:
+        reversed_dependency_graph = {task.id: set() for task in self.task_list}
+        for task in self.task_list:
             for parent in task.dependencies:
                 reversed_dependency_graph[parent].add(task.id)
         sorted_task_ids = self.topological_sort(reversed_dependency_graph)
@@ -150,15 +150,14 @@ class CriticalPathAnalysis:
         Returns True if the task has total slack time.
         """
         return False
-        
 
 if __name__ == '__main__':
-    SAMPLE_TASKS = [
+    SAMPLE_TASKS = TaskList([
         Task(1, 'T1', 3),
         Task(2, 'T2', 2),
         Task(3, 'T3', 4, {1, 2}),
         Task(4, 'T4', 2, {3}),
         Task(5, 'T5', 1, {3}),
-    ]
+    ])
     analysis = CriticalPathAnalysis(SAMPLE_TASKS)
     print(analysis)
