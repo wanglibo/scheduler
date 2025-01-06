@@ -32,6 +32,9 @@ class Task:
         if self.is_scheduled():
             return f'{task_info} start={self.start_time} end={self.end_time} resource={self.resource_id}'
         return task_info
+    
+    def __repr__(self) -> str:
+        return f'Task {self.id}'
 
     def is_scheduled(self) -> bool:
         return self.start_time is not None and self.resource_id is not None
