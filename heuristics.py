@@ -53,17 +53,19 @@ class PrioritizeNextLongest(SchedulingHeuristicInterface):
         return max(task_ids, key=lambda tid: self.task_map[tid].duration)
 
 if __name__ == '__main__':
-    T1 = Task(1, 'T1', 3)
-    T2 = Task(2, 'T2', 2)
-    T3 = Task(3, 'T3', 4, {1, 2})
-    T4 = Task(4, 'T4', 2, {3})
-    T5 = Task(5, 'T5', 1, {3})
+    SAMPLE_TASKS = TaskList([
+        Task('T1', 3),
+        Task('T2', 2),
+        Task('T3', 4, {'T1', 'T2'}),
+        Task('T4', 2, {'T3'}),
+        Task('T5', 1, {'T3'}),
+    ])
 
-    factory = SchedulingHeuristicFactory(TaskList([T1, T2, T3, T4, T5]))
+    factory = SchedulingHeuristicFactory(SAMPLE_TASKS)
     min_slack = factory.create(SchedulingHeuristicType.MIN_SLACK)
-    next_task_id = min_slack.next_task([1, 2])
-    print(next_task_id == 1)
+    next_task_id = min_slack.next_task(['T1', 'T2'])
+    print(next_task_id == 'T1')
 
     next_longest = factory.create(SchedulingHeuristicType.NEXT_LONGEST)
-    next_task_id = next_longest.next_task([2, 3])
-    print(next_task_id == 3)
+    next_task_id = next_longest.next_task(['T2', 'T3'])
+    print(next_task_id == 'T3')

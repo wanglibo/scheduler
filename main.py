@@ -82,11 +82,11 @@ class Scheduler:
 
 def main():
     SAMPLE_TASKS = TaskList([
-        Task(1, 'T1', 3),
-        Task(2, 'T2', 2),
-        Task(3, 'T3', 4, {1, 2}),
-        Task(4, 'T4', 2, {3}),
-        Task(5, 'T5', 1, {3}),
+        Task('T1', 3),
+        Task('T2', 2),
+        Task('T3', 4, {'T1', 'T2'}),
+        Task('T4', 2, {'T3'}),
+        Task('T5', 1, {'T3'}),
     ])
     AVAILABLE_RESOURCES = 2    
 
@@ -109,7 +109,7 @@ def main():
             
             print(f'\nResource {resource_id}:')
             for task in resource_tasks:
-                print(f'{task.name}: [{task.start_time} -> {task.end_time}]')
+                print(f'{task.id}: [{task.start_time} -> {task.end_time}]')
 
     test(SAMPLE_TASKS, AVAILABLE_RESOURCES, SchedulingHeuristicType.NEXT_LONGEST)
     test(SAMPLE_TASKS, AVAILABLE_RESOURCES, SchedulingHeuristicType.MIN_SLACK)

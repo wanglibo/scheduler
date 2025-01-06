@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict, Set, List, Optional, TypeAlias
 
 # Type aliases for domain-specific concepts
-TaskId: TypeAlias = int
+TaskId: TypeAlias = str
 Duration: TypeAlias = int
 StartTime: TypeAlias = int
 EndTime: TypeAlias = int
@@ -12,23 +12,21 @@ DependencySet: TypeAlias = Set[TaskId]
 class Task:
     """Represents a task in a project."""
     id: TaskId
-    name: str
     duration: Duration
     dependencies: DependencySet
     start_time: Optional[StartTime]
     resource_id: Optional[ResourceId]
 
-    def __init__(self, id: TaskId, name: str, duration: Duration, 
+    def __init__(self, id: TaskId, duration: Duration, 
                  dependencies: Optional[DependencySet] = None) -> None:
         self.id = id
-        self.name = name
         self.duration = duration
         self.dependencies = dependencies or set()
         self.start_time = None
         self.resource_id = None
 
     def __str__(self) -> str:
-        task_info = f'Task {self.id}({self.name}) duration={self.duration}'
+        task_info = f'Task {self.id} duration={self.duration}'
         if self.dependencies:
             task_info += f' dependencies={self.dependencies}'
         if self.is_scheduled():

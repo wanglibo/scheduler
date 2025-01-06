@@ -153,11 +153,11 @@ class CriticalPathAnalysis:
 
 if __name__ == '__main__':
     SAMPLE_TASKS = TaskList([
-        Task(1, 'T1', 3),
-        Task(2, 'T2', 2),
-        Task(3, 'T3', 4, {1, 2}),
-        Task(4, 'T4', 2, {3}),
-        Task(5, 'T5', 1, {3}),
+        Task('T1', 3),
+        Task('T2', 2),
+        Task('T3', 4, {'T1', 'T2'}),
+        Task('T4', 2, {'T3'}),
+        Task('T5', 1, {'T3'}),
     ])
     analysis = CriticalPathAnalysis(SAMPLE_TASKS)
     print(analysis)
