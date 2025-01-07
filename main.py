@@ -50,7 +50,7 @@ def main():
         print("=========================================")
         analysis = CriticalPathAnalysis(tasks)
         print("Critical Path Analysis:", analysis)
-        print("Scheduler:", scheduler)
+        print("\nScheduler:", scheduler)
         scheduled_tasks = scheduler.schedule(tasks, available_resources).as_list()
 
         print("\nActual finish time:", max(task.end_time for task in scheduled_tasks))

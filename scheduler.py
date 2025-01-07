@@ -106,7 +106,6 @@ class CriticalPathScheduler(SchedulerInterface):
                 # Not guaranteed to be optimal.
                 resource_candidates = {i: resource_next_available[i] for i in range(resource_count)
                                        if resource_next_available[i] <= deps_completion_time}
-                print('task:', task, 'resource candidates:', resource_candidates)
                 task.resource_id = min(
                     enumerate(resource_candidates), key=lambda x: deps_completion_time - x[1])[0]
             else:
