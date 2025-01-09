@@ -110,49 +110,6 @@ class CriticalPathAnalysis:
             self.timing[task_id].latest_start = latest_start
             self.timing[task_id].latest_finish = latest_finish
 
-
-    def critical_path(self) -> List[Task]:
-        """
-        Returns the critical path of the project.
-        """
-        return []
-
-    def slack_time(self) -> Dict[TaskId, int]:
-        """
-        Returns the slack time for each task.
-        """
-        return {}
-
-    def free_slack_time(self) -> Dict[TaskId, int]:
-        """
-        Returns the free slack time for each task.
-        """
-        return {}
-
-    def total_slack_time(self) -> int:
-        """
-        Returns the total slack time for the project.
-        """
-        return 0
-
-    def is_critical_path(self, task_id: TaskId) -> bool:
-        """
-        Returns True if the task is on the critical path.
-        """
-        return False
-
-    def is_free_slack(self, task_id: TaskId) -> bool:
-        """
-        Returns True if the task has free slack time.
-        """
-        return False
-
-    def is_total_slack(self, task_id: TaskId) -> bool:
-        """
-        Returns True if the task has total slack time.
-        """
-        return False
-
 if __name__ == '__main__':
     SAMPLE_TASKS = TaskList([
         Task('T1', 3),
